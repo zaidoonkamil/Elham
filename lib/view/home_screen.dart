@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.only(
                                             bottomRight: Radius.circular(10))),
                                     child: Icon(
-                                      Icons.add_to_home_screen,
+                                      Icons.reply_all_outlined,
                                       color: KprimaryScafoldColor,
                                     )),
                               ),
