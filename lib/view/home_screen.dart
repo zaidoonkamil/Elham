@@ -3,6 +3,7 @@ import 'package:educate/local/cache_helper.dart';
 import 'package:educate/view/quiz_screen.dart';
 import 'package:educate/widgets/constant.dart';
 import 'package:educate/widgets/custom_buttonn.dart';
+import 'package:educate/widgets/custom_form_field.dart';
 import 'package:educate/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoaded = false;
   late Orientation _currentOrientation;
   InterstitialAd? interstitialAd;
+  static GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  static TextEditingController nameController = TextEditingController();
 
   void interstitial() {
     InterstitialAd.load(
@@ -108,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    nameController.text= CacheHelper.getData(key: 'name');
     interstitial();
     super.initState();
   }
@@ -134,16 +138,63 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () async {
-                                  try {
-                                    await canLaunch('https://play.google.com/store/apps/developer?id=zaidoon+kamil')
-                                        ? await launch(
-                                      'https://play.google.com/store/apps/developer?id=zaidoon+kamil',
-                                      enableJavaScript: true,
-                                      forceWebView: true,
-                                    ) : throw 'could not lunch url';
-                                  } catch (e) {
-                                    e.toString();
-                                  }
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          'ادخل الاسم الجديد',
+                                          textAlign: TextAlign.end,
+                                        ),
+                                        content: SizedBox(
+                                          height: 150,
+                                          child: Form(
+                                            key: formKey,
+                                            child: Column(
+                                              children: [
+                                                CustomFormField(
+                                                  controller: nameController,
+                                                  validate: (String? value) {
+                                                    if (value!.isEmpty) {
+                                                      return 'رجائا ادخل الاسم';
+                                                    }
+                                                  },
+                                                  hintText: 'الاسم',
+                                                  textInputType:
+                                                  TextInputType.text,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        actions: [
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.all(8.0),
+                                            child: CustomBottomm(
+                                              borderRadius: BorderRadius.circular(16),
+                                              horizontal: 10,
+                                              vertical: 12,
+                                              fontSize: 16,
+                                              colorText: KprimaryScafoldColor,
+                                              fontWeight: FontWeight.bold,
+                                              text: 'حفظ',
+                                              colorBottom: KprimaryColor,
+                                              onTap: (){
+                                                if (formKey.currentState!.validate()) {
+                                                  setState(() {
+
+                                                  });
+                                                  CacheHelper.saveData(key:'name',value: nameController.text);
+                                                  navigateBack(context);
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                                 child: Container(
                                   height: double.maxFinite,
@@ -153,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.only(
                                             bottomRight: Radius.circular(10))),
                                     child: Icon(
-                                      Icons.reply_all_outlined,
+                                      Icons.person,
                                       color: KprimaryScafoldColor,
                                     )),
                               ),
