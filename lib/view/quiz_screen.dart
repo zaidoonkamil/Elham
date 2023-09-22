@@ -242,17 +242,16 @@ class _QuizScreenState extends State<QuizScreen> {
                                           if(_score == lengthQuestionsArt!-1){
                                             Get.to(ResultScreen(score: _score, nameIndex: widget.nameIndex,));
                                           }else{
-                                            if(enableAds==3){
-                                              interstitial();
-                                              enableAds=0;
-                                            }
-                                            enableAds++;
                                             CacheHelper.saveData(key: widget.nameIndex,value: _score);
                                           }
                                         }
                                         });
                                       }else if(answer != currentQuestion.correctAnswer){
-                                        interstitial();
+                                        if(enableAds==3){
+                                          interstitial();
+                                          enableAds=0;
+                                        }
+                                        enableAds++;
                                         QuickAlert.show(
                                         context: context,
                                         type: QuickAlertType.error,
