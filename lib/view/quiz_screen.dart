@@ -246,6 +246,11 @@ class _QuizScreenState extends State<QuizScreen> {
                                           }
                                         }
                                         });
+                                        if(enableAds==4){
+                                          interstitial();
+                                          enableAds=0;
+                                        }
+                                        enableAds++;
                                       }else if(answer != currentQuestion.correctAnswer){
                                         if(enableAds==3){
                                           interstitial();
@@ -256,7 +261,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                         context: context,
                                         type: QuickAlertType.error,
                                         title: 'خطأ',
-                                        text: 'لقد خطأت في الاجابة الرجاء المحاولة مرة اخرى',
+                                        text: 'لقد خطأت في الاجابة حاول مرة اخرى',
                                       );
                                       Future.delayed(const Duration(milliseconds: 200), () {
                                         setState(() {
